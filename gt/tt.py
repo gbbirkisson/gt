@@ -5,8 +5,8 @@ import subprocess
 import sys
 from datetime import datetime
 
-import matplotlib.dates as md
-import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 
 def report_path(report_name: str) -> str:
@@ -27,30 +27,44 @@ def plot(report_name: str) -> None:
 
     assert len(wpm) > 0, f"No data in file {report_path(report_name)}"
 
-    xfmt = md.DateFormatter("%Y-%m-%d")
-    fig, ax1 = plt.subplots()
-    ax1.xaxis.set_major_formatter(xfmt)
+    # Create figure with secondary y-axis
+    fig = make_subplots(specs=[[{"secondary_y": True}]])
 
-    color = "tab:orange"
-    ax1.set_xlabel("date")
-    ax1.set_xticklabels(ax1.get_xticks(), rotation=10)
-    ax1.set_ylabel("wpm", color=color)
-    ax1.plot(timestamp, wpm, color=color)
-    ax1.tick_params(axis="y", labelcolor=color)
-    ax1.axhline(y=40, color="tab:red", linestyle="-")
-    ax1.axhline(y=60, color="tab:green", linestyle="-")
+    # Add traces
+    fig.add_trace(
+        go.Scatter(
+            x=timestamp,
+            y=cpm,
+            name="characters per minute",
+            line=dict(color="firebrick", width=4),
+        ),
+        secondary_y=False,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=timestamp,
+            y=wpm,
+            name="words per minute",
+            line=dict(color="orange", width=4),
+        ),
+        secondary_y=True,
+    )
 
-    ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
-    ax2.xaxis.set_major_formatter(xfmt)
+    # Add figure title
+    fig.update_layout(title_text=report_name)
 
-    color = "tab:blue"
-    ax2.set_ylabel("cpm", color=color)  # we already handled the x-label with ax1
-    ax2.plot(timestamp, cpm, color=color)
-    ax2.tick_params(axis="y", labelcolor=color)
+    # Set x-axis title
+    # fig.update_xaxes(title_text="time")
 
-    fig.tight_layout()  # otherwise the right y-label is slightly clipped
-    plt.title(report_name)
-    plt.show()
+    # Set y-axes titles
+    fig.update_yaxes(title_text="<b>words per minute</b>", secondary_y=False)
+    fig.update_yaxes(title_text="<b>characters per minute</b>", secondary_y=True)
+
+    # Add lines
+    fig.add_hline(y=40, line_dash="dash", line_color="red", secondary_y=True)
+    fig.add_hline(y=60, line_dash="dash", line_color="green", secondary_y=True)
+
+    fig.show()
 
 
 def tt(items: list[dict[str, str]], report_name: str | None = None) -> None:
