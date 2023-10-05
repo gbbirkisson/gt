@@ -17,6 +17,16 @@ def remove_html_tags(s: str) -> str:
     return re.sub(_html_clean, "", s)
 
 
+def remove_new_lines(s: str) -> str:
+    return s.replace("\n", "")
+
+
+def change_unwanted_chars(s: str) -> str:
+    for o, n in [("„", '"'), ("“", '"')]:
+        s = s.replace(o, n)
+    return s
+
+
 def random_letters(n: int) -> str:
     return "".join(random.sample(string.ascii_letters, n))
 
@@ -37,8 +47,10 @@ def rss(url: str, merge_title: bool) -> list[dict[str, str]]:
             text = sep.join([entry["title"], entry["description"]])
         else:
             text = description
-        text = text.replace("\n", "")
-        return {"text": remove_html_tags(text), "attribution": link}
+        text = remove_html_tags(text)
+        text = remove_new_lines(text)
+        text = change_unwanted_chars(text)
+        return {"text": text, "attribution": link}
 
     return [_format(e, merge_title) for e in feedparser.parse(url).entries]
 
