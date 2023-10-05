@@ -31,12 +31,14 @@ def plot(report_name: str) -> None:
     fig, ax1 = plt.subplots()
     ax1.xaxis.set_major_formatter(xfmt)
 
-    color = "tab:red"
+    color = "tab:orange"
     ax1.set_xlabel("date")
     ax1.set_xticklabels(ax1.get_xticks(), rotation=10)
     ax1.set_ylabel("wpm", color=color)
     ax1.plot(timestamp, wpm, color=color)
     ax1.tick_params(axis="y", labelcolor=color)
+    ax1.axhline(y=40, color="tab:red", linestyle="-")
+    ax1.axhline(y=60, color="tab:green", linestyle="-")
 
     ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
     ax2.xaxis.set_major_formatter(xfmt)
@@ -47,6 +49,7 @@ def plot(report_name: str) -> None:
     ax2.tick_params(axis="y", labelcolor=color)
 
     fig.tight_layout()  # otherwise the right y-label is slightly clipped
+    plt.title(report_name)
     plt.show()
 
 
