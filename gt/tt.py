@@ -34,18 +34,18 @@ def plot(report_name: str) -> None:
     fig.add_trace(
         go.Scatter(
             x=timestamp,
-            y=cpm,
-            name="characters per minute",
-            line=dict(color="firebrick", width=4),
+            y=wpm,
+            name="words per minute",
+            line=dict(color="orange", width=4),
         ),
         secondary_y=False,
     )
     fig.add_trace(
         go.Scatter(
             x=timestamp,
-            y=wpm,
-            name="words per minute",
-            line=dict(color="orange", width=4),
+            y=cpm,
+            name="characters per minute",
+            line=dict(color="dodgerblue", width=4),
         ),
         secondary_y=True,
     )
@@ -57,12 +57,34 @@ def plot(report_name: str) -> None:
     # fig.update_xaxes(title_text="time")
 
     # Set y-axes titles
-    fig.update_yaxes(title_text="<b>words per minute</b>", secondary_y=False)
+    fig.update_yaxes(
+        title_text="<b>words per minute</b>",
+        secondary_y=False,
+    )
     fig.update_yaxes(title_text="<b>characters per minute</b>", secondary_y=True)
 
     # Add lines
-    fig.add_hline(y=40, line_dash="dash", line_color="red", secondary_y=True)
-    fig.add_hline(y=60, line_dash="dash", line_color="green", secondary_y=True)
+    fig.add_hline(
+        y=40,
+        line_dash="dash",
+        line_color="tomato",
+        secondary_y=False,
+        label={"text": "average"},
+    )
+    fig.add_hline(
+        y=60,
+        line_dash="dash",
+        line_color="gold",
+        secondary_y=False,
+        label={"text": "good"},
+    )
+    fig.add_hline(
+        y=80,
+        line_dash="dash",
+        line_color="green",
+        secondary_y=False,
+        label={"text": "good"},
+    )
 
     fig.show()
 
