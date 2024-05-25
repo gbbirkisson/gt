@@ -152,7 +152,7 @@ def news_en() -> list[dict[str, str]]:
             p.starmap(
                 rss,
                 [
-                    ["https://rss.nytimes.com/services/xml/rss/nyt/Europe.xml", True],
+                    # ["https://rss.nytimes.com/services/xml/rss/nyt/Europe.xml", True],
                     ["https://www.theguardian.com/world/rss", True],
                     ["http://feeds.bbci.co.uk/news/technology/rss.xml", True],
                 ],
